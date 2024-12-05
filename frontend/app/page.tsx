@@ -1,6 +1,6 @@
-export default function Home() {
+export default async function Home() {
   return (
-    <main>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-amber-50">
       <appkit-button />
     </main>
   );

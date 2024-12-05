@@ -12,19 +12,28 @@ import { opBNBTestnet } from "@reown/appkit/networks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createAppKit } from "@reown/appkit/react";
 
+import { siweConfig } from "@/libs/siwe";
+
 const queryClient = new QueryClient();
 const wagmiAdapter = new WagmiAdapter({
-  projectId: process.env.NEXT_PUBLIC_REOWN_PROJECT_ID!,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID!,
   storage: createStorage({ storage: cookieStorage }),
   networks: [opBNBTestnet],
   ssr: true,
 });
 
 createAppKit({
-  projectId: process.env.NEXT_PUBLIC_REOWN_PROJECT_ID!,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID!,
   adapters: [wagmiAdapter],
   networks: [opBNBTestnet],
   defaultNetwork: opBNBTestnet,
+  siweConfig: siweConfig,
+  themeMode: "light",
+  features: {
+    analytics: true,
+    onramp: false,
+    swaps: false,
+  },
 });
 
 export default function Provider({
