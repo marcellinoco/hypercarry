@@ -76,3 +76,13 @@ Make sure to have native tokens in the wallet to pay for deployment. Then, deplo
 ```bash
 forge script script/Contract.s.sol:Script --rpc-url opbnb-testnet --account dev --sender 0x47961BCAC3858f2e25818F96444177cEd0B75b61 --broadcast
 ```
+
+## Frontend
+
+Start the development server:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
