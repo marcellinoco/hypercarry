@@ -74,7 +74,15 @@ cast wallet new
 Make sure to have native tokens in the wallet to pay for deployment. Then, deploy the contract:
 
 ```bash
-forge script script/Contract.s.sol:Script --rpc-url opbnb-testnet --account dev --sender 0x47961BCAC3858f2e25818F96444177cEd0B75b61 --broadcast
+forge script script/Contract.s.sol:Script --rpc-url opbnb-testnet --account dev --sender <wallet-address> --broadcast
+```
+
+To get the standard json input (for verification), run:
+
+```bash
+# (Optional) Constructor arguments in abi-encoded format:
+cast abi-encode "constructor(address)" "<address>"
+forge verify-contract --show-standard-json-input <contract-address> src/Contract.sol:Contract > output.json
 ```
 
 ## Frontend
