@@ -5,6 +5,7 @@ libs = ["dependencies"]
 
 [dependencies]
 "@openzeppelin-contracts" = "5.1.0"
+"@openzeppelin-contracts-upgradeable" = "5.1.0"
 forge-std = "1.9.4"
 
 [soldeer]
