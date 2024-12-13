@@ -10,7 +10,7 @@ contract TournamentFactory is Ownable {
 
     address public immutable implementation;
 
-    uint256 private tournamentsCount;
+    uint256 public tournamentsCount;
     address[] public tournaments;
 
     event TournamentCreated(address indexed tournamentAddress, uint256 indexed tournamentId, address indexed organizer);
