@@ -5,6 +5,7 @@ libs = ["dependencies"]
 
 [dependencies]
 "@openzeppelin-contracts" = "5.1.0"
+"@openzeppelin-contracts-upgradeable" = "5.1.0"
 forge-std = "1.9.4"
 
 [soldeer]
@@ -12,6 +13,8 @@ remappings_version = false
 
 [rpc_endpoints]
 anvil = "http://localhost:8545"
+bsc-mainnet = "https://bsc-dataseed.bnbchain.org"
+bsc-testnet = "https://bsc-testnet-dataseed.bnbchain.org"
 opbnb-mainnet = "https://opbnb-mainnet-rpc.bnbchain.org/"
 opbnb-testnet = "https://opbnb-testnet-rpc.bnbchain.org/"
 
