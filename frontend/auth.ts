@@ -23,15 +23,12 @@ export const authOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     session({ session, token }) {
-      console.log("masuk sini ga");
       if (!token.sub) return session;
 
       const [, chainId, address] = token.sub.split(":");
       if (chainId && address) {
         session.address = address;
         session.chainId = parseInt(chainId, 10);
-        console.log("session: ", session);
-        console.log("token: ", token);
       }
 
       return session;
