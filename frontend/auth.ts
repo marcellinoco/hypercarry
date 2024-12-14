@@ -5,7 +5,15 @@ import {
   verifySignature,
   getChainIdFromMessage,
   getAddressFromMessage,
+  SIWESession,
 } from "@reown/appkit-siwe";
+
+declare module "next-auth" {
+  interface Session extends SIWESession {
+    address: string;
+    chainId: number;
+  }
+}
 
 const nextAuthSecret = process.env.NEXTAUTH_SECRET!;
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID!;
@@ -15,12 +23,15 @@ export const authOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     session({ session, token }) {
+      console.log("masuk sini ga");
       if (!token.sub) return session;
 
       const [, chainId, address] = token.sub.split(":");
       if (chainId && address) {
         session.address = address;
         session.chainId = parseInt(chainId, 10);
+        console.log("session: ", session);
+        console.log("token: ", token);
       }
 
       return session;
@@ -72,4 +83,15 @@ export const authOptions = {
       },
     }),
   ],
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
 } satisfies AuthOptions;

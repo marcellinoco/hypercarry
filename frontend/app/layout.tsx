@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 
 import Provider from "./provider";
+import { Navbar } from "./components/core/navbar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,7 +20,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Provider cookies={cookie}>{children}</Provider>
+        <Provider cookies={cookie}>
+          <div className="flex min-h-screen min-w-full flex-col">
+            <Navbar />
+            {children}
+          </div>
+        </Provider>
       </body>
     </html>
   );
