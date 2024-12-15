@@ -36,11 +36,11 @@ export async function uploadFile(formData: FormData) {
 
 export async function getFile(bucket: string, fileName: string) {
   // expires in a day, but the default will be a week
-  const dataStream = await minioClient.presignedGetObject(
+  const link = await minioClient.presignedGetObject(
     bucket,
     fileName,
     24 * 60 * 60
   );
-  console.log(dataStream);
-  return dataStream;
+  console.log(link);
+  return link;
 }
