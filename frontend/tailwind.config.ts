@@ -18,7 +18,8 @@ export default {
       },
       colors: {},
       fontFamily: {
-        sans: ["var(--font-neulis)"],
+        sans: ["var(--font-parkinsans)"],
+        cursive: ["var(--font-neulis)"],
       },
       fontWeight: {
         100: "100",
