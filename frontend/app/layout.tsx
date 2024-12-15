@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 
 import { cn } from "@/lib/utils";
 import Provider from "./provider";
+import { Navbar } from "./components/core/navbar";
 
 const neulis = localFont({
   src: [
@@ -117,8 +118,13 @@ export default async function RootLayout({
   const cookie = (await headers()).get("cookie");
   return (
     <html lang="en">
-      <body className={cn("font-sans", neulis.variable)}>
-        <Provider cookies={cookie}>{children}</Provider>
+      <body>
+        <Provider cookies={cookie}>
+          <div className="flex min-h-screen min-w-full flex-col">
+            <Navbar />
+            {children}
+          </div>
+        </Provider>
       </body>
     </html>
   );
