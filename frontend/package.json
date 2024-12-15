@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prestart": "npx drizzle-kit migrate"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.1",
