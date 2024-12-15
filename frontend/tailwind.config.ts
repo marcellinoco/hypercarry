@@ -1,8 +1,8 @@
 import type { Config } from "tailwindcss";
 
 export default {
-    darkMode: ["class"],
-    content: [
+  darkMode: ["class"],
+  content: [
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
@@ -13,6 +13,9 @@ export default {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+		  boxShadow: {
+			"inner-sm": "inset 0 1.5px 0 0 rgba(0, 0, 0, 0.05)",
+		  },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -56,6 +59,7 @@ export default {
   			}
   		}
   	}
+    
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;

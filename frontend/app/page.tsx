@@ -1,12 +1,10 @@
-"use client";
+import { Button } from "@/components/ui/button";
+import NewUserForm from "./components/NewUserForm";
 
-import { useAccount } from "wagmi";
-
-export default function Home() {
-  const { address } = useAccount();
+export default async function Home() {
   return (
-    <main className="flex flex-grow flex-col items-center justify-center bg-amber-50">
-      {address}
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-slate-200">
+      <NewUserForm />
     </main>
   );
 }

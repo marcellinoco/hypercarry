@@ -1,10 +1,109 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
+
+import localFont from "next/font/local";
 import { headers } from "next/headers";
 
+import { cn } from "@/lib/utils";
 import Provider from "./provider";
 import { Navbar } from "./components/core/navbar";
+
+const neulis = localFont({
+  src: [
+    {
+      path: "./fonts/Neulis-Thin.woff2",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Neulis-ThinItalic.woff2",
+      weight: "100",
+      style: "italic",
+    },
+    {
+      path: "./fonts/Neulis-ExtraLight.woff2",
+      weight: "200",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Neulis-ExtraLightItalic.woff2",
+      weight: "200",
+      style: "italic",
+    },
+    {
+      path: "./fonts/Neulis-Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Neulis-LightItalic.woff2",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "./fonts/Neulis-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Neulis-Italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "./fonts/Neulis-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Neulis-MediumItalic.woff2",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "./fonts/Neulis-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Neulis-SemiBoldItalic.woff2",
+      weight: "600",
+      style: "italic",
+    },
+    {
+      path: "./fonts/Neulis-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Neulis-BoldItalic.woff2",
+      weight: "700",
+      style: "italic",
+    },
+    {
+      path: "./fonts/Neulis-ExtraBold.woff2",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Neulis-ExtraBoldItalic.woff2",
+      weight: "800",
+      style: "italic",
+    },
+    {
+      path: "./fonts/Neulis-Black.woff2",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Neulis-BlackItalic.woff2",
+      weight: "900",
+      style: "italic",
+    },
+  ],
+  variable: "--font-neulis",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",

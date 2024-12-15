@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
+  experimental: {
+    swcPlugins: [['@swc-jotai/react-refresh', {}]],
+  },
 };
 
 export default nextConfig;
