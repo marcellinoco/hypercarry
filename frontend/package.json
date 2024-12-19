@@ -42,6 +42,7 @@
     "@types/pg": "^8.11.10",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@wagmi/cli": "^2.1.22",
     "drizzle-kit": "^0.29.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.0",
