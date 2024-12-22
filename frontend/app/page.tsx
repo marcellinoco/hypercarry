@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
-import NewUserForm from "./components/NewUserForm";
+import Link from "next/link";
 
-export default async function Home() {
+export default async function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-slate-200">
-      <NewUserForm />
+    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-100">
+      <Link href="/account-creation">Create account</Link>
     </main>
   );
 }

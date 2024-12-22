@@ -2,12 +2,20 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 
+import { Parkinsans } from "next/font/google";
 import localFont from "next/font/local";
 import { headers } from "next/headers";
 
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import Provider from "./provider";
 import { Navbar } from "./components/core/navbar";
+
+const parkinsans = Parkinsans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-parkinsans",
+});
 
 const neulis = localFont({
   src: [
@@ -118,13 +126,14 @@ export default async function RootLayout({
   const cookie = (await headers()).get("cookie");
   return (
     <html lang="en">
-      <body>
+      <body className={cn("font-sans", parkinsans.variable, neulis.variable)}>
         <Provider cookies={cookie}>
           <div className="flex min-h-screen min-w-full flex-col">
             <Navbar />
             {children}
           </div>
         </Provider>
+        <Toaster richColors />
       </body>
     </html>
   );
