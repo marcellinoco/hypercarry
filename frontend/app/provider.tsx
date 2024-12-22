@@ -1,18 +1,18 @@
 "use client";
 
+import { ViewTransitions } from "next-view-transitions";
 import {
   cookieStorage,
   cookieToInitialState,
   createStorage,
   WagmiProvider,
 } from "wagmi";
-import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
-import { opBNBTestnet } from "@reown/appkit/networks";
-
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createAppKit } from "@reown/appkit/react";
 
 import { siweConfig } from "@/libs/siwe";
+import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
+import { opBNBTestnet } from "@reown/appkit/networks";
+import { createAppKit } from "@reown/appkit/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 const wagmiAdapter = new WagmiAdapter({
@@ -49,7 +49,9 @@ export default function Provider({
       config={wagmiAdapter.wagmiConfig}
       initialState={initialState}
     >
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <ViewTransitions>{children}</ViewTransitions>
+      </QueryClientProvider>
     </WagmiProvider>
   );
 }
