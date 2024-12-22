@@ -1,0 +1,163 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "initialOwner",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  { "inputs": [], "type": "error", "name": "FailedDeployment" },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "balance", "type": "uint256" },
+      { "internalType": "uint256", "name": "needed", "type": "uint256" }
+    ],
+    "type": "error",
+    "name": "InsufficientBalance"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "owner", "type": "address" }
+    ],
+    "type": "error",
+    "name": "OwnableInvalidOwner"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "type": "error",
+    "name": "OwnableUnauthorizedAccount"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address",
+        "indexed": true
+      },
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address",
+        "indexed": true
+      }
+    ],
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "anonymous": false
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "tournamentAddress",
+        "type": "address",
+        "indexed": true
+      },
+      {
+        "internalType": "uint256",
+        "name": "tournamentId",
+        "type": "uint256",
+        "indexed": true
+      },
+      {
+        "internalType": "address",
+        "name": "organizer",
+        "type": "address",
+        "indexed": true
+      }
+    ],
+    "type": "event",
+    "name": "TournamentCreated",
+    "anonymous": false
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "organizer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startTime",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "endTime", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "maxParticipants",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "registrationFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "organizerFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "prizePoolPercentages",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "createTournament",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }]
+  },
+  {
+    "inputs": [],
+    "stateMutability": "view",
+    "type": "function",
+    "name": "implementation",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }]
+  },
+  {
+    "inputs": [],
+    "stateMutability": "view",
+    "type": "function",
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }]
+  },
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "renounceOwnership",
+    "outputs": []
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function",
+    "name": "tournaments",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }]
+  },
+  {
+    "inputs": [],
+    "stateMutability": "view",
+    "type": "function",
+    "name": "tournamentsCount",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "transferOwnership",
+    "outputs": []
+  }
+]

@@ -9,6 +9,7 @@ import { headers } from "next/headers";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import Provider from "./provider";
+import { Navbar } from "./components/core/navbar";
 
 const parkinsans = Parkinsans({
   subsets: ["latin"],
@@ -126,7 +127,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={cn("font-sans", parkinsans.variable, neulis.variable)}>
-        <Provider cookies={cookie}>{children}</Provider>
+        <Provider cookies={cookie}>
+          <div className="flex min-h-screen min-w-full flex-col">
+            <Navbar />
+            {children}
+          </div>
+        </Provider>
         <Toaster richColors />
       </body>
     </html>

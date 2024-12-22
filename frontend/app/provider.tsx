@@ -9,12 +9,13 @@ import {
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { opBNBTestnet } from "@reown/appkit/networks";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createAppKit } from "@reown/appkit/react";
 
 import { siweConfig } from "@/libs/siwe";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
+
 const wagmiAdapter = new WagmiAdapter({
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID!,
   storage: createStorage({ storage: cookieStorage }),

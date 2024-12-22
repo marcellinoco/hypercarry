@@ -5,7 +5,15 @@ import {
   verifySignature,
   getChainIdFromMessage,
   getAddressFromMessage,
+  SIWESession,
 } from "@reown/appkit-siwe";
+
+declare module "next-auth" {
+  interface Session extends SIWESession {
+    address: string;
+    chainId: number;
+  }
+}
 
 const nextAuthSecret = process.env.NEXTAUTH_SECRET!;
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID!;
@@ -72,4 +80,15 @@ export const authOptions = {
       },
     }),
   ],
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
 } satisfies AuthOptions;
