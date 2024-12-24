@@ -7,13 +7,15 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { Tournaments } from "./tournaments";
+import { timestamps } from "..";
+import { tournaments } from "./tournaments";
 
-export const Matches = pgTable("matches", {
+export const matches = pgTable("matches", {
   id: varchar({ length: 63 }).primaryKey(),
   tournamentId: varchar("tournament_id", { length: 63 }).references(
-    () => Tournaments.id,
+    () => tournaments.id,
   ),
   players: json().default([]),
   startTimeUnix: integer("start_time_unix"),
+  ...timestamps,
 });
