@@ -19,7 +19,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
@@ -45,9 +44,8 @@ export default function NewUserForm() {
   async function onSubmit(data: FormData) {
     if (!address) return;
 
-    startTransition(async () => {
-      try {
-        // Create FormData to handle file upload
+    startTransition(() => {
+      const createUserPromise = async () => {
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("playerName", data.playerName);
@@ -60,19 +58,22 @@ export default function NewUserForm() {
         const result = await createUser(formData);
 
         if (result.error) {
-          toast.error("Error", {
-            description: result.error,
-          });
-          return;
+          throw new Error(result.error);
         }
 
-        toast.success("Your account has been created!");
-
-        // Reset form
         form.reset();
-      } catch (error) {
-        toast.error("Something went wrong. Please try again.");
-      }
+        return { playerName: data.playerName };
+      };
+
+      toast.promise(createUserPromise, {
+        loading: "Creating your account...",
+        success: (data) => {
+          return `Welcome, ${data.playerName}! Your account has been created.`;
+        },
+        error: (error) => {
+          return error.message || "Something went wrong. Please try again.";
+        },
+      });
     });
   }
 
@@ -144,9 +145,6 @@ export default function NewUserForm() {
           </form>
         </Form>
       </div>
-      <p className="font-cursive absolute left-1/2 top-8 -translate-x-1/2 text-lg font-500 text-slate-400/70">
-        OpenArena
-      </p>
     </div>
   );
 }
