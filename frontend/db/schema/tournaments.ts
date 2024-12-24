@@ -4,10 +4,10 @@ import {
   integer,
   json,
   pgTable,
+  timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { timestamps } from "..";
 import { users } from "./users";
 
 export const tournaments = pgTable("tournaments", {
@@ -20,5 +20,6 @@ export const tournaments = pgTable("tournaments", {
   prizePoolPercentages: doublePrecision("prize_pool_percentages"),
   startTimeUnix: integer("start_time_unix"),
   endTimeUnix: integer("end_time_unix"),
-  ...timestamps,
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
