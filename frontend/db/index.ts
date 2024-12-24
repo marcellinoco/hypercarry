@@ -20,4 +20,9 @@ const pool = new Pool({
 
 const db = drizzle(pool, { schema, casing: "snake_case" });
 
-export { db };
+const timestamps = {
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+};
+
+export { db, timestamps };
