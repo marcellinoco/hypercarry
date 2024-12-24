@@ -1,6 +1,4 @@
-import { pgTable, varchar } from "drizzle-orm/pg-core";
-
-import { timestamps } from "..";
+import { pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: varchar({ length: 63 }).primaryKey(),
@@ -8,5 +6,6 @@ export const users = pgTable("users", {
   name: varchar({ length: 255 }).notNull().unique(),
   playerName: varchar({ length: 255 }).notNull().unique(),
   imageId: varchar({ length: 63 }),
-  ...timestamps,
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
