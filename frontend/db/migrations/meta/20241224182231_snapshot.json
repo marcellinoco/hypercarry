@@ -1,5 +1,5 @@
 {
-  "id": "e4cc4acd-d4db-4f4f-ae7d-dc65feb5a071",
+  "id": "0f61a818-b1b3-45e9-b33f-354384431a42",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -19,13 +19,6 @@
           "type": "varchar(63)",
           "primaryKey": false,
           "notNull": false
-        },
-        "players": {
-          "name": "players",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'[]'::json"
         },
         "start_time_unix": {
           "name": "start_time_unix",

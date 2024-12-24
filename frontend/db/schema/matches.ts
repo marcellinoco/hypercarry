@@ -13,7 +13,6 @@ export const matches = pgTable("matches", {
   tournamentId: varchar("tournament_id", { length: 63 }).references(
     () => tournaments.id,
   ),
-  players: json().default([]),
   startTimeUnix: integer("start_time_unix"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

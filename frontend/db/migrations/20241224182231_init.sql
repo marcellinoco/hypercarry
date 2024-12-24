@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS "matches" (
 	"id" varchar(63) PRIMARY KEY NOT NULL,
 	"tournament_id" varchar(63),
-	"players" json DEFAULT '[]'::json,
 	"start_time_unix" integer,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
