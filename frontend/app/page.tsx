@@ -2,11 +2,10 @@ import type { Tournament } from "@/data/landing";
 
 import { Trophy, UsersRound } from "lucide-react";
 import { Link } from "next-view-transitions";
-import Image from "next/image";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { featuredTournaments } from "@/data/landing";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import Logo from "@/public/logo";
 import { columns } from "./components/TournamentColumns";
 import { TournamentTable } from "./components/TournamentTable";
@@ -28,9 +27,7 @@ export default async function HomePage() {
             primaryShape="fill-indigo-500"
             secondaryShape="fill-indigo-700"
           />
-          <p className="font-cursive text-2xl font-500 text-white">
-            OpenArena
-          </p>
+          <p className="font-cursive text-2xl font-500 text-white">OpenArena</p>
         </Link>
         <div className="flex grow flex-col items-stretch px-4 py-10">
           <div className="flex flex-col items-stretch *:justify-start *:transition-transform">

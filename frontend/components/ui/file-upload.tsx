@@ -4,7 +4,7 @@ import { ImageUp } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useDropzone } from "react-dropzone";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 
 const mainVariant = {
   initial: {
@@ -95,7 +95,7 @@ export const FileUpload = ({
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       layout
-                      className="shadow-input w-fit flex-shrink-0 rounded-lg px-2 py-1 text-sm text-slate-600"
+                      className="w-fit flex-shrink-0 rounded-lg px-2 py-1 text-sm text-slate-600 shadow-input"
                     >
                       {(file.size / (1024 * 1024)).toFixed(2)} MB
                     </motion.p>
@@ -132,7 +132,7 @@ export const FileUpload = ({
                   damping: 20,
                 }}
                 className={cn(
-                  "relative z-40 flex h-32 w-full max-w-[8rem] flex-col items-center justify-center rounded-lg bg-white group-hover/file:shadow-2xl border borders-slate-200",
+                  "borders-slate-200 relative z-40 flex h-32 w-full max-w-[8rem] flex-col items-center justify-center rounded-lg border bg-white group-hover/file:shadow-2xl",
                   "shadow-[0px_10px_50px_rgba(0,0,0,0.1)]",
                 )}
               >

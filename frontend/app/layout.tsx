@@ -7,9 +7,9 @@ import localFont from "next/font/local";
 import { headers } from "next/headers";
 
 import { Toaster } from "@/components/ui/sonner";
-import { cn } from "@/lib/utils";
-import Provider from "./provider";
+import { cn } from "@/libs/utils";
 import { Navbar } from "./components/core/navbar";
+import Provider from "./provider";
 
 const parkinsans = Parkinsans({
   subsets: ["latin"],

@@ -10,13 +10,11 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     turbo: {},
+    swcPlugins: [["@swc-jotai/react-refresh", {}]],
   },
   webpack: (config) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
-  },
-  experimental: {
-    swcPlugins: [['@swc-jotai/react-refresh', {}]],
   },
 };
 

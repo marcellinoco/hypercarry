@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import * as z from "zod";
 
-import { createUser } from "@/actions/user";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/ui/file-upload";
 import {
@@ -20,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createUser } from "../actions/user";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),

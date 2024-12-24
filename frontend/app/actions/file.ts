@@ -2,10 +2,10 @@
 
 import { minioClient } from "@/libs/minio";
 
-export async function uploadFile(formData: FormData) {
+export async function uploadFile(imageId: string, objectFile: File) {
   const bucket = "profile-images-bucket";
 
-  const file = formData.get("file") as File | null;
+  const file = objectFile;
 
   if (!file) {
     throw new Error("File or path can't be empty");
@@ -25,21 +25,21 @@ export async function uploadFile(formData: FormData) {
 
   const response = await minioClient.putObject(
     bucket,
-    file.name,
+    imageId,
     buffer,
     buffer.length,
-    metadata
+    metadata,
   );
 
   console.log("resp: ", response);
 }
 
-export async function getFile(bucket: string, fileName: string) {
+export async function getFile(bucket: string, imageId: string) {
   // expires in a day, but the default will be a week
   const link = await minioClient.presignedGetObject(
     bucket,
-    fileName,
-    24 * 60 * 60
+    imageId,
+    24 * 60 * 60,
   );
   console.log(link);
   return link;
