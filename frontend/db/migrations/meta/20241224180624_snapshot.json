@@ -1,5 +1,5 @@
 {
-  "id": "12164eb2-01cf-4ec4-8080-a858b6df8c4e",
+  "id": "e4cc4acd-d4db-4f4f-ae7d-dc65feb5a071",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -32,6 +32,20 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -79,6 +93,30 @@
           "notNull": false,
           "default": "'[]'::json"
         },
+        "max_participants": {
+          "name": "max_participants",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_fee": {
+          "name": "registration_fee",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "organizer_fee": {
+          "name": "organizer_fee",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "prize_pool_percentages": {
+          "name": "prize_pool_percentages",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
         "start_time_unix": {
           "name": "start_time_unix",
           "type": "integer",
@@ -90,6 +128,20 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -128,22 +180,16 @@
           "name": "wallet_address",
           "type": "varchar(63)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "username": {
-          "name": "username",
+        "name": {
+          "name": "name",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "password": {
-          "name": "password",
+        "playerName": {
+          "name": "playerName",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -153,24 +199,38 @@
           "type": "varchar(63)",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_username_unique": {
-          "name": "users_username_unique",
+        "users_name_unique": {
+          "name": "users_name_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "username"
+            "name"
           ]
         },
-        "users_email_unique": {
-          "name": "users_email_unique",
+        "users_playerName_unique": {
+          "name": "users_playerName_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "email"
+            "playerName"
           ]
         }
       },

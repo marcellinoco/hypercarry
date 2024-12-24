@@ -1,13 +1,11 @@
 import {
-  date,
-  index,
   integer,
   json,
   pgTable,
+  timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { timestamps } from "..";
 import { tournaments } from "./tournaments";
 
 export const matches = pgTable("matches", {
@@ -17,5 +15,6 @@ export const matches = pgTable("matches", {
   ),
   players: json().default([]),
   startTimeUnix: integer("start_time_unix"),
-  ...timestamps,
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
