@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+
+import Image from "next/image";
+
+import { getFile } from "../actions/file";
+import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Button } from "../components/ui/button";
-import { getFile, uploadFile } from "../actions/file";
-import Image from "next/image";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -17,7 +19,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append("file", file);
 
-      await uploadFile(formData);
+      // await uploadFile("", formData);
     }
   };
 

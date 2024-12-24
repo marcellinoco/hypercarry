@@ -1,7 +1,5 @@
 "use client";
 
-import { time } from "console";
-
 import { useState } from "react";
 
 import { v4 as uuid } from "uuid";

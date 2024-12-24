@@ -1,13 +1,11 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { v4 as uuid } from "uuid";
 
 import { db } from "@/db";
 import { users } from "@/db/schema/users";
 import { oppCode } from "@/libs/constant";
-import { minioClient } from "@/libs/minio";
 import { uploadFile } from "./file";
 
 export async function getUser(address: string) {
@@ -49,10 +47,10 @@ export async function createUser(formData: FormData) {
 
       await uploadFile(imageId, profilePicture);
 
-      // Revalidate the users page
-      revalidatePath("/users");
-
-      return { success: true };
+      return {
+        code: oppCode.SUCCESS,
+        message: "User has successfully created",
+      };
     } catch {
       return {
         code: oppCode.UNKNOWN,

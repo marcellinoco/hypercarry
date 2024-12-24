@@ -1,11 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
-import { Address, parseEther } from "viem";
-import { useAccount } from "wagmi";
-
-import { useWriteTournamentFactoryCreateTournament } from "@/contracts";
 import { TournamentForm } from "../components/TournamentForm";
 
 function page() {
