@@ -1,7 +1,6 @@
 CREATE TABLE "matches" (
 	"id" varchar(63) PRIMARY KEY NOT NULL,
 	"tournament_id" varchar(63),
-	"players" json DEFAULT '[]'::json,
 	"start_time_unix" integer,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
@@ -9,7 +8,7 @@ CREATE TABLE "matches" (
 --> statement-breakpoint
 CREATE TABLE "tournaments" (
 	"id" varchar(63) PRIMARY KEY NOT NULL,
-	"author_id" varchar(63) NOT NULL,
+	"author_id" varchar(63),
 	"title" varchar(255),
 	"game" varchar(255),
 	"tournament_image_id" varchar(255),
@@ -18,7 +17,7 @@ CREATE TABLE "tournaments" (
 	"prize_pool" integer,
 	"registered_players" json DEFAULT '[]'::json,
 	"max_participants" integer NOT NULL,
-	"registration_fee" integer NOT NULL,
+	"registration_fee" double precision NOT NULL,
 	"organizer_fee" integer NOT NULL,
 	"prize_pool_percentages" double precision NOT NULL,
 	"start_time_unix" integer NOT NULL,

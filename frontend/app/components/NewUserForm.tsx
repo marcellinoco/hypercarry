@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { oppCode } from "@/libs/constant";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createUser } from "../actions/user";
 
@@ -57,8 +58,8 @@ export default function NewUserForm() {
 
         const result = await createUser(formData);
 
-        if (result.error) {
-          throw new Error(result.error);
+        if (result.code !== oppCode.SUCCESS) {
+          throw new Error(result.message);
         }
 
         form.reset();

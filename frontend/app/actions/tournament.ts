@@ -10,7 +10,7 @@ import { oppCode } from "@/libs/constant";
 
 export async function createTournament(tournament: Tournament) {
   try {
-    const createdTournament = db
+    const createdTournament = await db
       .insert(tournaments)
       .values({
         id: tournament.id,
@@ -65,8 +65,6 @@ export async function registerPlayer(spec: RegisterPlayerSpec) {
         message: "Invalid registered player format",
       };
     }
-
-    console.log("test: ", oldUser.registeredPlayers);
 
     if (oldUser.registeredPlayers.includes(newUserId)) {
       return {
