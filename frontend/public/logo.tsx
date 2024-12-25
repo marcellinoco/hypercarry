@@ -1,7 +1,7 @@
 import * as React from "react";
 import { SVGProps } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 
 interface LogoProps extends SVGProps<SVGSVGElement> {
   size?: number;

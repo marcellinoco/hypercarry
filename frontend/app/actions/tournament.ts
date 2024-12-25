@@ -22,6 +22,12 @@ export async function createTournament(tournament: Tournament) {
         prizePoolPercentages: tournament.prizePoolPercentages,
         registeredPlayers: tournament.registeredPlayers,
         registrationFee: tournament.registrationFee,
+        format: tournament.format,
+        game: tournament.game,
+        tournamentImageId: tournament.tournamentImageId,
+        prizePool: tournament.prizePool,
+        region: tournament.region,
+        title: tournament.title,
       })
       .returning({
         id: tournaments.id,

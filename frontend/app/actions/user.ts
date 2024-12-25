@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { db } from "@/db";
 import { users } from "@/db/schema/users";
 import { oppCode } from "@/libs/constant";
-import { uploadFile } from "./file";
+import { uploadFileProfile } from "./file";
 
 export async function getUser(address: string) {
   try {
@@ -45,7 +45,7 @@ export async function createUser(formData: FormData) {
         imageId: imageId,
       });
 
-      await uploadFile(imageId, profilePicture);
+      await uploadFileProfile(imageId, profilePicture);
 
       return {
         code: oppCode.SUCCESS,
