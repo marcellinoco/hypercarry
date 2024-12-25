@@ -10,6 +10,7 @@ import { useWriteTournamentFactoryCreateTournament } from "@/contracts";
 import { CreateTournamentSpec } from "@/contracts/tournament";
 import { Tournament } from "@/db/types";
 import { oppCode } from "@/libs/constant";
+import { uploadFileTournament } from "../actions/file";
 import { createTournament } from "../actions/tournament";
 import { getUser } from "../actions/user";
 
@@ -21,12 +22,19 @@ const TournamentForm = () => {
     registrationFee: "",
     organizerFee: "",
     prizePoolPercentages: "",
+    format: "",
+    game: "",
+    tournamentImage: null,
+    prizePool: "",
+    region: "",
+    title: "",
   });
 
   const { address } = useAccount();
   const { writeContract } = useWriteTournamentFactoryCreateTournament();
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("masuk kan ya");
     e.preventDefault();
     if (!address || !writeContract) return;
 
@@ -51,6 +59,7 @@ const TournamentForm = () => {
     const user = await getUser(address);
 
     if (user.code === oppCode.SUCCESS && user.user) {
+      const tournamentImageId = uuid();
       const tournament: Tournament = {
         id: uuid(),
         authorId: user.user.id,
@@ -63,7 +72,23 @@ const TournamentForm = () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         registeredPlayers: undefined,
+        format: "Battle Royale",
+        game: formData.game,
+        tournamentImageId: formData.tournamentImage ? tournamentImageId : null,
+        prizePool: Number(formData.prizePool),
+        region: formData.region,
+        title: formData.title,
       };
+
+      const fileTournamentForm = new FormData();
+      if (formData.tournamentImage) {
+        fileTournamentForm.append(
+          "tournamentPicture",
+          formData.tournamentImage,
+        );
+        fileTournamentForm.append("tournamentPictureId", tournamentImageId);
+        await uploadFileTournament(fileTournamentForm);
+      }
 
       const response = await createTournament(tournament);
       console.log(response);
@@ -71,8 +96,73 @@ const TournamentForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="min-w-[50rem] space-y-4">
       <h2 className="text-center text-xl font-bold">Create Tournament</h2>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label>Title</label>
+          <input
+            type="text"
+            value={formData.title}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, title: e.target.value }))
+            }
+            className="block w-full border p-2"
+          />
+        </div>
+        <div>
+          <label>Game</label>
+          <input
+            type="text"
+            value={formData.game}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, game: e.target.value }))
+            }
+            className="block w-full border p-2"
+          />
+        </div>
+      </div>
+      <div>
+        <label>Tournament Image</label>
+        <input
+          type="file"
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              tournamentImage: e.target.files![0],
+            }))
+          }
+          className="block w-full border p-2"
+        />
+      </div>
+      <div>
+        <label>Prize Pool</label>
+        <input
+          type="number"
+          value={formData.prizePool}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              prizePool: e.target.value,
+            }))
+          }
+          className="block w-full border p-2"
+        />
+      </div>
+      <div>
+        <label>Region</label>
+        <input
+          type="text"
+          value={formData.region}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              region: e.target.value,
+            }))
+          }
+          className="block w-full border p-2"
+        />
+      </div>
       <div>
         <label>Start Time</label>
         <input

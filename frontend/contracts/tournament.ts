@@ -5,6 +5,12 @@ export interface CreateTournamentSpec {
   registrationFee: string;
   organizerFee: string;
   prizePoolPercentages: string;
+  title: string;
+  game: string;
+  tournamentImage: File | null;
+  format: string;
+  region: string;
+  prizePool: string;
 }
 
 export interface RegisterPlayerSpec {
