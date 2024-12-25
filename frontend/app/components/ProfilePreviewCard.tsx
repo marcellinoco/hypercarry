@@ -3,61 +3,25 @@
 import { FC } from "react";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useAccount } from "wagmi";
 
 import { Button } from "@/components/ui/button";
-import { oppCode, profileBucketName } from "@/libs/constant";
-import { AppKitButton } from "@reown/appkit";
-import { useQuery } from "@tanstack/react-query";
-import { getFile } from "../actions/file";
-import { getUser } from "../actions/user";
+import { User } from "@/db/types";
 
-const ProfilePreviewCard: FC = () => {
+interface props {
+  user: User;
+  profileImageLink: string | undefined;
+  isProfileImageLoading: boolean;
+  handleChangeTab: (tab: "PREVIEW" | "UPDATE") => void;
+}
+
+const ProfilePreviewCard: FC<props> = ({
+  user,
+  isProfileImageLoading,
+  profileImageLink,
+  handleChangeTab,
+}) => {
   const { address } = useAccount();
-
-  if (!address) return <AppKitButton />;
-
-  const {
-    data: profileData,
-    isLoading: isProfileLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      return await getUser(address.toString());
-    },
-    refetchOnWindowFocus: false,
-  });
-
-  const { data: profileImageLink, isLoading: isProfileImageLoading } = useQuery(
-    {
-      queryKey: ["profile-image-link"],
-      queryFn: async () => {
-        return await getFile(
-          profileBucketName,
-          profileData?.user?.imageId ?? "",
-        );
-      },
-      refetchOnWindowFocus: false,
-      enabled: !!profileData?.user?.imageId,
-    },
-  );
-
-  console.log(profileData);
-
-  if (isProfileLoading) return <div>Loading...</div>;
-
-  if (profileData?.code === oppCode.NOT_FOUND) {
-    return (
-      <div className="flex flex-col items-center gap-3">
-        <div>Please create your account first</div>
-        <Link href={"/profile/create"}>
-          <Button>Click Here</Button>
-        </Link>
-      </div>
-    );
-  }
 
   return (
     <div className="flex w-full max-w-lg flex-col items-center gap-4">
@@ -90,14 +54,16 @@ const ProfilePreviewCard: FC = () => {
             <div className="grid w-full grid-cols-8">
               <h3 className="col-span-3">Name</h3>
               <h5 className="col-span-1 text-center">:</h5>
-              <h5 className="col-span-4">{profileData?.user?.name}</h5>
+              <h5 className="col-span-4">{user.name}</h5>
             </div>
             <div className="grid w-full grid-cols-8">
               <h3 className="col-span-3">Player Name</h3>
               <h5 className="col-span-1 text-center">:</h5>
-              <h5 className="col-span-4">{profileData?.user?.playerName}</h5>
+              <h5 className="col-span-4">{user.playerName}</h5>
             </div>
           </div>
+
+          <Button onClick={() => handleChangeTab("UPDATE")}>Edit</Button>
         </div>
       </div>
     </div>
