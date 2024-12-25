@@ -27,7 +27,6 @@ async function main() {
       prizePoolPercentages: 22,
       startTimeUnix: 0,
       endTimeUnix: 0,
-      authorId: uuid(),
     });
   }
   console.log("Seed start");
@@ -36,6 +35,14 @@ async function main() {
 
   await db.insert(users).values(usersData);
   await db.insert(tournaments).values(tournamentsData);
+
+  //my address
+  await db.insert(users).values({
+    id: uuid(),
+    name: "Valencius Apriady Primayudha",
+    playerName: "Kalo",
+    walletAddress: process.env.MY_ADDRESS!,
+  });
   console.log("Seed Done");
   return;
 }

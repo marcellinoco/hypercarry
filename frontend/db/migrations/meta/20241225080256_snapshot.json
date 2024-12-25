@@ -1,9 +1,5 @@
 {
-<<<<<<<< HEAD:frontend/db/migrations/meta/20241225071701_snapshot.json
-  "id": "a3d0f330-bd3e-4eb7-b42e-7c377dccfa13",
-========
-  "id": "0f61a818-b1b3-45e9-b33f-354384431a42",
->>>>>>>> db7fcf63b32f4af3991c22f5033d9b60e8709d57:frontend/db/migrations/meta/20241224182231_snapshot.json
+  "id": "a1e6476f-c5ac-4811-acbd-310d354f830f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -81,7 +77,7 @@
           "name": "author_id",
           "type": "varchar(63)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "title": {
           "name": "title",
@@ -134,7 +130,7 @@
         },
         "registration_fee": {
           "name": "registration_fee",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },

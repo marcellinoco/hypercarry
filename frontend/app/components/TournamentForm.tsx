@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 import { Address, parseEther } from "viem";
 import { useAccount } from "wagmi";
@@ -38,12 +39,17 @@ const TournamentForm = () => {
     e.preventDefault();
     if (!address || !writeContract) return;
 
+    console.log("lolos");
+
     const endTimeUnix = Math.floor(new Date(formData.endTime).getTime() / 1000);
     const startTimeUnix = Math.floor(
       new Date(formData.startTime).getTime() / 1000,
     );
 
-    writeContract({
+    console.log("startimeunix: ", startTimeUnix);
+    console.log("endtimeunix: ", endTimeUnix);
+
+    await writeContract({
       address: process.env.NEXT_PUBLIC_TOURNAMENT_FACTORY_ADDRESS as Address,
       args: [
         address,
@@ -55,6 +61,8 @@ const TournamentForm = () => {
         formData.prizePoolPercentages.split(",").map((x) => BigInt(x.trim())),
       ],
     });
+
+    console.log("nah fetching ya ges yak", address);
 
     const user = await getUser(address);
 
@@ -91,8 +99,12 @@ const TournamentForm = () => {
       }
 
       const response = await createTournament(tournament);
-      console.log(response);
+      if (response.code === oppCode.SUCCESS) {
+        toast("Tournament has successfully created");
+        return;
+      }
     }
+    toast("Create tournament failed");
   };
 
   return (

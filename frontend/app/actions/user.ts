@@ -14,6 +14,13 @@ export async function getUser(address: string) {
       where: eq(users.walletAddress, address),
     });
 
+    if (!response) {
+      return {
+        code: oppCode.NOT_FOUND,
+        message: "User not found",
+      };
+    }
+
     return {
       code: oppCode.SUCCESS,
       user: response,
