@@ -35,6 +35,7 @@ const TournamentForm = () => {
   const { writeContract } = useWriteTournamentFactoryCreateTournament();
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("masuk kan ya");
     e.preventDefault();
     if (!address || !writeContract) return;
 
