@@ -1,94 +1,86 @@
 "use client";
 
-import { useTransition } from "react";
+import { FC, useEffect } from "react";
 
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import Image from "next/image";
 import { useAccount } from "wagmi";
-import * as z from "zod";
 
-import { Button } from "@/components/ui/button";
-import { FileUpload } from "@/components/ui/file-upload";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { oppCode } from "@/libs/constant";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createUser } from "../actions/user";
+import { Label } from "@/components/ui/label";
+import { profileBucketName } from "@/libs/constant";
+import { AppKitButton } from "@reown/appkit";
+import { useQuery } from "@tanstack/react-query";
+import { getFile } from "../actions/file";
+import { getUser } from "../actions/user";
 
-const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  playerName: z.string().min(2, "Player name must be at least 2 characters"),
-  profilePicture: z.any().optional(),
-});
+const ProfilePreviewCard: FC = () => {
+  const { address } = useAccount();
 
-type FormData = z.infer<typeof formSchema>;
+  if (!address) return <AppKitButton />;
 
-export default function NewUserForm() {
-  const [isPending, startTransition] = useTransition();
-  const { address, isConnecting } = useAccount();
-
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      playerName: "",
+  const { data: profileData, isLoading: isProfileLoading } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      return await getUser(address.toString());
     },
+    refetchOnWindowFocus: false,
   });
 
-  async function onSubmit(data: FormData) {
-    if (!address) return;
+  const { data: profileImageLink, isLoading: isProfileImageLoading } = useQuery(
+    {
+      queryKey: ["profile-image-link"],
+      queryFn: async () => {
+        return await getFile(
+          profileBucketName,
+          profileData?.user?.imageId ?? "",
+        );
+      },
+      refetchOnWindowFocus: false,
+    },
+  );
 
-    startTransition(() => {
-      const createUserPromise = async () => {
-        const formData = new FormData();
-        formData.append("name", data.name);
-        formData.append("playerName", data.playerName);
-        formData.append("walletAddress", address);
-
-        if (data.profilePicture) {
-          formData.append("profilePicture", data.profilePicture[0]);
-        }
-
-        const result = await createUser(formData);
-
-        if (result.code !== oppCode.SUCCESS) {
-          throw new Error(result.message);
-        }
-
-        form.reset();
-        return { playerName: data.playerName };
-      };
-
-      toast.promise(createUserPromise, {
-        loading: "Creating your account...",
-        success: (data) => {
-          return `Welcome, ${data.playerName}! Your account has been created.`;
-        },
-        error: (error) => {
-          return error.message || "Something went wrong. Please try again.";
-        },
-      });
-    });
-  }
-
-  if (!address) {
-    return <appkit-button />;
-  }
+  if (isProfileLoading) return <div>Loading...</div>;
 
   return (
     <div className="flex w-full max-w-lg flex-col items-center gap-4">
       <div className="relative flex flex-col items-center gap-6 self-stretch overflow-hidden rounded-2xl border border-slate-300 bg-gradient-to-b from-slate-100 to-slate-50 p-10 shadow-2xl shadow-slate-300 before:absolute before:inset-0 before:rounded-2xl before:shadow-inner-sm before:shadow-white">
         <h1 className="font-cursive text-3xl font-500 text-slate-900">
-          Create New Account
+          Profile
         </h1>
-        <Form {...form}>
+
+        <div className="flex w-full flex-col items-center justify-center gap-6">
+          {!profileImageLink && (
+            <Image
+              alt="example"
+              src="/placeholder.jpg"
+              fill
+              width={0}
+              height={0}
+            />
+          )}
+
+          {profileImageLink && (
+            <Image
+              alt="example"
+              src={profileImageLink}
+              width={100}
+              height={100}
+            />
+          )}
+
+          <div className="flex w-full flex-col items-center justify-center gap-3 self-stretch px-3 py-1">
+            <div className="grid w-full grid-cols-8">
+              <h3 className="col-span-3">Name</h3>
+              <h5 className="col-span-1 text-center">:</h5>
+              <h5 className="col-span-4">{profileData?.user?.name}</h5>
+            </div>
+            <div className="grid w-full grid-cols-8">
+              <h3 className="col-span-3">Player Name</h3>
+              <h5 className="col-span-1 text-center">:</h5>
+              <h5 className="col-span-4">{profileData?.user?.playerName}</h5>
+            </div>
+          </div>
+        </div>
+        {/* <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex w-full flex-col gap-4 self-stretch"
@@ -143,8 +135,9 @@ export default function NewUserForm() {
               {isPending ? "Creating..." : "Create Account"}
             </Button>
           </form>
-        </Form>
+        </Form> */}
       </div>
     </div>
   );
-}
+};
+export { ProfilePreviewCard };

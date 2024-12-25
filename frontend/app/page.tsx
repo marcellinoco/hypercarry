@@ -42,7 +42,7 @@ export default async function HomePage() {
               <p className="">Tournaments</p>
             </Link>
             <Link
-              href="/"
+              href="/profile"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
                 "text-slate-300 hover:scale-105 hover:bg-slate-900 hover:text-white",
