@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 import { Address, parseEther } from "viem";
-import { useAccount } from "wagmi";
+import { opBNBTestnet } from "viem/chains";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 
-import { useWriteTournamentFactoryCreateTournament } from "@/contracts";
+import {
+  useSimulateTournamentFactoryCreateTournament,
+  useWriteTournamentFactoryCreateTournament,
+} from "@/contracts";
 import { CreateTournamentSpec } from "@/contracts/tournament";
 import { Tournament } from "@/db/types";
 import { oppCode } from "@/libs/constant";
@@ -17,100 +21,101 @@ import { getUser } from "../actions/user";
 
 const TournamentForm = () => {
   const [formData, setFormData] = useState<CreateTournamentSpec>({
-    startTime: "",
-    endTime: "",
-    maxParticipants: "",
-    registrationFee: "",
-    organizerFee: "",
-    prizePoolPercentages: "",
-    format: "",
-    game: "",
+    startTime: "2024-12-25T20:00:00",
+    endTime: "2024-12-25T20:30:00",
+    maxParticipants: "10",
+    registrationFee: "1000000000000000",
+    organizerFee: "5",
+    prizePoolPercentages: "50,30,15",
+    format: "Battle Royale",
+    game: "Fortnite",
     tournamentImage: null,
-    prizePool: "",
-    region: "",
-    title: "",
+    prizePool: "10000000000000000",
+    region: "Indonesia",
+    title: "Wow Cup",
   });
 
   const { address } = useAccount();
-  const { writeContract } = useWriteTournamentFactoryCreateTournament();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    console.log("masuk kan ya");
-    e.preventDefault();
-    if (!address || !writeContract) return;
+  const endTimeUnix = Math.floor(new Date(formData.endTime).getTime() / 1000);
+  const startTimeUnix = Math.floor(
+    new Date(formData.startTime).getTime() / 1000,
+  );
 
-    const endTimeUnix = Math.floor(new Date(formData.endTime).getTime() / 1000);
-    const startTimeUnix = Math.floor(
-      new Date(formData.startTime).getTime() / 1000,
-    );
-
-    console.log("args input: ", [
-      address,
-      BigInt(startTimeUnix),
-      BigInt(endTimeUnix),
+  const { data: simulateData } = useSimulateTournamentFactoryCreateTournament({
+    chainId: opBNBTestnet.id,
+    address: process.env.NEXT_PUBLIC_TOURNAMENT_FACTORY_ADDRESS as Address,
+    args: [
+      address ?? "0x",
+      BigInt(startTimeUnix || 0),
+      BigInt(endTimeUnix || 0),
       BigInt(formData.maxParticipants),
       parseEther(formData.registrationFee),
       BigInt(formData.organizerFee),
       formData.prizePoolPercentages.split(",").map((x) => BigInt(x.trim())),
-    ]);
+    ],
+  });
 
-    await writeContract({
-      address: process.env.NEXT_PUBLIC_TOURNAMENT_FACTORY_ADDRESS as Address,
-      args: [
-        address,
-        BigInt(startTimeUnix),
-        BigInt(endTimeUnix),
-        BigInt(formData.maxParticipants),
-        parseEther(formData.registrationFee),
-        BigInt(formData.organizerFee),
-        formData.prizePoolPercentages.split(",").map((x) => BigInt(x.trim())),
-      ],
-    });
+  const { data: hash, writeContractAsync } =
+    useWriteTournamentFactoryCreateTournament();
 
-    console.log("nah fetching ya ges yak", address);
+  const { isSuccess } = useWaitForTransactionReceipt({ hash });
 
-    const user = await getUser(address);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    if (user.code === oppCode.SUCCESS && user.user) {
-      const tournamentImageId = uuid();
-      const tournament: Tournament = {
-        id: uuid(),
-        authorId: user.user.id,
-        startTimeUnix: startTimeUnix,
-        endTimeUnix: endTimeUnix,
-        maxParticipants: Number(formData.maxParticipants),
-        prizePoolPercentages: Number(formData.prizePoolPercentages),
-        organizerFee: Number(formData.organizerFee),
-        registrationFee: Number(formData.registrationFee),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        registeredPlayers: undefined,
-        format: "Battle Royale",
-        game: formData.game,
-        tournamentImageId: formData.tournamentImage ? tournamentImageId : null,
-        prizePool: Number(formData.prizePool),
-        region: formData.region,
-        title: formData.title,
-      };
-
-      const fileTournamentForm = new FormData();
-      if (formData.tournamentImage) {
-        fileTournamentForm.append(
-          "tournamentPicture",
-          formData.tournamentImage,
-        );
-        fileTournamentForm.append("tournamentPictureId", tournamentImageId);
-        await uploadFileTournament(fileTournamentForm);
-      }
-
-      const response = await createTournament(tournament);
-      if (response.code === oppCode.SUCCESS) {
-        toast("Tournament has successfully created");
-        return;
-      }
-    }
-    toast("Create tournament failed");
+    if (!simulateData?.request || !writeContractAsync) return;
+    await writeContractAsync(simulateData.request);
   };
+
+  useEffect(() => {
+    if (!isSuccess) return;
+
+    // (async () => {
+    //   const user = await getUser(address ?? "");
+    //   if (user.code === oppCode.SUCCESS && user.user) {
+    //     const tournamentImageId = uuid();
+    //     const tournament: Tournament = {
+    //       id: uuid(),
+    //       authorId: user.user.id,
+    //       startTimeUnix: startTimeUnix,
+    //       endTimeUnix: endTimeUnix,
+    //       maxParticipants: Number(formData.maxParticipants),
+    //       prizePoolPercentages: Number(formData.prizePoolPercentages),
+    //       organizerFee: Number(formData.organizerFee),
+    //       registrationFee: Number(formData.registrationFee),
+    //       createdAt: new Date(),
+    //       updatedAt: new Date(),
+    //       registeredPlayers: undefined,
+    //       format: "Battle Royale",
+    //       game: formData.game,
+    //       tournamentImageId: formData.tournamentImage
+    //         ? tournamentImageId
+    //         : null,
+    //       prizePool: Number(formData.prizePool),
+    //       region: formData.region,
+    //       title: formData.title,
+    //     };
+
+    //     const fileTournamentForm = new FormData();
+    //     if (formData.tournamentImage) {
+    //       fileTournamentForm.append(
+    //         "tournamentPicture",
+    //         formData.tournamentImage,
+    //       );
+    //       fileTournamentForm.append("tournamentPictureId", tournamentImageId);
+    //       await uploadFileTournament(fileTournamentForm);
+    //     }
+
+    //     const response = await createTournament(tournament);
+    //     if (response.code === oppCode.SUCCESS) {
+    //       toast("Tournament has successfully created");
+    //       return;
+    //     }
+    //   }
+    //   toast("Create tournament failed");
+    // })();
+  }, [isSuccess]);
 
   return (
     <form onSubmit={handleSubmit} className="min-w-[50rem] space-y-4">
@@ -259,6 +264,7 @@ const TournamentForm = () => {
       <button
         type="submit"
         className="rounded bg-blue-500 px-4 py-2 text-white"
+        disabled={!address || !simulateData?.request || !writeContractAsync}
       >
         Create Tournament
       </button>
