@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
@@ -33,6 +34,7 @@ type FormData = z.infer<typeof formSchema>;
 export default function NewUserForm() {
   const [isPending, startTransition] = useTransition();
   const { address, isConnecting } = useAccount();
+  const router = useRouter();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -76,6 +78,8 @@ export default function NewUserForm() {
         },
       });
     });
+
+    router.push("/");
   }
 
   if (!address) {

@@ -1,12 +1,13 @@
 "use client";
 
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useAccount } from "wagmi";
 
-import { Label } from "@/components/ui/label";
-import { profileBucketName } from "@/libs/constant";
+import { Button } from "@/components/ui/button";
+import { oppCode, profileBucketName } from "@/libs/constant";
 import { AppKitButton } from "@reown/appkit";
 import { useQuery } from "@tanstack/react-query";
 import { getFile } from "../actions/file";
@@ -17,7 +18,11 @@ const ProfilePreviewCard: FC = () => {
 
   if (!address) return <AppKitButton />;
 
-  const { data: profileData, isLoading: isProfileLoading } = useQuery({
+  const {
+    data: profileData,
+    isLoading: isProfileLoading,
+    isError,
+  } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       return await getUser(address.toString());
@@ -35,10 +40,24 @@ const ProfilePreviewCard: FC = () => {
         );
       },
       refetchOnWindowFocus: false,
+      enabled: !!profileData?.user?.imageId,
     },
   );
 
+  console.log(profileData);
+
   if (isProfileLoading) return <div>Loading...</div>;
+
+  if (profileData?.code === oppCode.NOT_FOUND) {
+    return (
+      <div className="flex flex-col items-center gap-3">
+        <div>Please create your account first</div>
+        <Link href={"/profile/create"}>
+          <Button>Click Here</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="flex w-full max-w-lg flex-col items-center gap-4">
@@ -46,24 +65,24 @@ const ProfilePreviewCard: FC = () => {
         <h1 className="font-cursive text-3xl font-500 text-slate-900">
           Profile
         </h1>
-
         <div className="flex w-full flex-col items-center justify-center gap-6">
+          {isProfileImageLoading && "Loading..."}
+
           {!profileImageLink && (
             <Image
-              alt="example"
+              alt="placeholder"
               src="/placeholder.jpg"
-              fill
-              width={0}
-              height={0}
+              width={50}
+              height={50}
             />
           )}
 
           {profileImageLink && (
             <Image
-              alt="example"
+              alt="profileImage"
               src={profileImageLink}
-              width={100}
-              height={100}
+              width={250}
+              height={250}
             />
           )}
 
@@ -80,62 +99,6 @@ const ProfilePreviewCard: FC = () => {
             </div>
           </div>
         </div>
-        {/* <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex w-full flex-col gap-4 self-stretch"
-          >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="pl-3">Full name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your full name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="playerName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="pl-3">Player name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your player name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="profilePicture"
-              render={({ field: { onChange } }) => (
-                <FormItem>
-                  <FormLabel className="pl-3">Profile picture</FormLabel>
-                  <FormControl>
-                    <FileUpload
-                      onChange={(files) => {
-                        onChange(files);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit" className="mt-4" disabled={isPending}>
-              {isPending ? "Creating..." : "Create Account"}
-            </Button>
-          </form>
-        </Form> */}
       </div>
     </div>
   );
