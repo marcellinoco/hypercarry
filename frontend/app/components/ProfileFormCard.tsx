@@ -70,7 +70,6 @@ const ProfileFormCard: FC<props> = ({
         formData.append("playerName", data.playerName);
         formData.append("profilePictureId", user.imageId ?? "");
 
-        console.log(data.profilePicture[0]);
         formData.append("profilePicture", data.profilePicture[0]);
 
         const result = await updateUser(formData);
