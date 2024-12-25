@@ -68,6 +68,11 @@ const TournamentForm = () => {
     await writeContractAsync(simulateData.request);
   };
 
+  console.log(!address || !simulateData?.request || !writeContractAsync);
+  console.log(!address);
+  console.log(!simulateData?.request);
+  console.log(!writeContractAsync);
+
   useEffect(() => {
     if (!isSuccess) return;
 

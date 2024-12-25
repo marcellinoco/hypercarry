@@ -7,3 +7,5 @@ export enum oppCode {
   ALREADY_REGISTERED,
   OTP_EXPIRED,
 }
+
+export const profileBucketName = "profile-images-bucket";

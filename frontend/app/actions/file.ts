@@ -1,20 +1,18 @@
 "use server";
 
-import { oppCode } from "@/libs/constant";
+import { oppCode, profileBucketName } from "@/libs/constant";
 import { minioClient } from "@/libs/minio";
 
 export async function uploadFileProfile(imageId: string, objectFile: File) {
-  const bucket = "profile-images-bucket";
-
   const file = objectFile;
 
   if (!file) {
     throw new Error("File or path can't be empty");
   }
 
-  const exists = await minioClient.bucketExists(bucket);
+  const exists = await minioClient.bucketExists(profileBucketName);
   if (!exists) {
-    await minioClient.makeBucket(bucket, "us-east-1");
+    await minioClient.makeBucket(profileBucketName, "us-east-1");
   }
 
   const metadata = {
@@ -25,7 +23,7 @@ export async function uploadFileProfile(imageId: string, objectFile: File) {
   const buffer = Buffer.from(arrayBuffer);
 
   const response = await minioClient.putObject(
-    bucket,
+    profileBucketName,
     imageId,
     buffer,
     buffer.length,
@@ -36,8 +34,6 @@ export async function uploadFileProfile(imageId: string, objectFile: File) {
 }
 
 export async function uploadFileTournament(formData: FormData) {
-  const bucket = "profile-images-bucket";
-
   const tournamentPicture = formData.get("tournamentPicture") as File;
   const imageId = formData.get("tournamentPictureId") as string;
 
@@ -48,9 +44,9 @@ export async function uploadFileTournament(formData: FormData) {
     };
   }
 
-  const exists = await minioClient.bucketExists(bucket);
+  const exists = await minioClient.bucketExists(profileBucketName);
   if (!exists) {
-    await minioClient.makeBucket(bucket, "us-east-1");
+    await minioClient.makeBucket(profileBucketName, "us-east-1");
   }
 
   const metadata = {
@@ -61,7 +57,7 @@ export async function uploadFileTournament(formData: FormData) {
   const buffer = Buffer.from(arrayBuffer);
 
   const response = await minioClient.putObject(
-    bucket,
+    profileBucketName,
     imageId,
     buffer,
     buffer.length,
