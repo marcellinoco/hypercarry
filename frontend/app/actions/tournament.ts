@@ -66,8 +66,6 @@ export async function registerPlayer(spec: RegisterPlayerSpec) {
       };
     }
 
-    console.log("test: ", oldUser.registeredPlayers);
-
     if (oldUser.registeredPlayers.includes(newUserId)) {
       return {
         code: oppCode.ALREADY_REGISTERED,

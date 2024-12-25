@@ -40,16 +40,29 @@ export async function createUser(formData: FormData) {
     const name = formData.get("name") as string;
     const playerName = formData.get("playerName") as string;
     const profilePicture = formData.get("profilePicture") as File;
+    console.log(profilePicture);
 
     const imageId = uuid();
     // create user on db
     try {
+      const userExists = await db.query.users.findFirst({
+        where: eq(users.walletAddress, walletAddress),
+      });
+
+      console.log("dah ada bang", userExists);
+      if (userExists) {
+        return {
+          code: oppCode.ALREADY_REGISTERED,
+          message: "Wallet has been registered",
+        };
+      }
+
       await db.insert(users).values({
         id: uuid(),
         name: name,
         playerName: playerName,
         walletAddress: walletAddress,
-        imageId: imageId,
+        imageId: profilePicture ? imageId : null,
       });
 
       await uploadFileProfile(imageId, profilePicture);

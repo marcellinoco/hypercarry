@@ -35,19 +35,23 @@ const TournamentForm = () => {
   const { writeContract } = useWriteTournamentFactoryCreateTournament();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("masuk kan ya");
     e.preventDefault();
     if (!address || !writeContract) return;
-
-    console.log("lolos");
 
     const endTimeUnix = Math.floor(new Date(formData.endTime).getTime() / 1000);
     const startTimeUnix = Math.floor(
       new Date(formData.startTime).getTime() / 1000,
     );
 
-    console.log("startimeunix: ", startTimeUnix);
-    console.log("endtimeunix: ", endTimeUnix);
+    console.log("args input: ", [
+      address,
+      BigInt(startTimeUnix),
+      BigInt(endTimeUnix),
+      BigInt(formData.maxParticipants),
+      parseEther(formData.registrationFee),
+      BigInt(formData.organizerFee),
+      formData.prizePoolPercentages.split(",").map((x) => BigInt(x.trim())),
+    ]);
 
     await writeContract({
       address: process.env.NEXT_PUBLIC_TOURNAMENT_FACTORY_ADDRESS as Address,
