@@ -14,7 +14,7 @@ CREATE TABLE "tournaments" (
 	"tournament_image_id" varchar(255),
 	"format" varchar(255),
 	"region" varchar(255),
-	"prize_pool" integer,
+	"prize_pool" bigint,
 	"registered_players" json DEFAULT '[]'::json,
 	"max_participants" integer NOT NULL,
 	"registration_fee" double precision NOT NULL,

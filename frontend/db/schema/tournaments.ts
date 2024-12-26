@@ -1,5 +1,5 @@
 import {
-  date,
+  bigint,
   doublePrecision,
   integer,
   json,
@@ -18,7 +18,7 @@ export const tournaments = pgTable("tournaments", {
   tournamentImageId: varchar("tournament_image_id", { length: 255 }),
   format: varchar({ length: 255 }),
   region: varchar({ length: 255 }),
-  prizePool: integer("prize_pool"),
+  prizePool: bigint("prize_pool", { mode: "bigint" }),
   registeredPlayers: json("registered_players").default([]),
   maxParticipants: integer("max_participants").notNull(),
   registrationFee: doublePrecision("registration_fee").notNull(),

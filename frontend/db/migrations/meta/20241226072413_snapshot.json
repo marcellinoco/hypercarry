@@ -1,5 +1,5 @@
 {
-  "id": "a1e6476f-c5ac-4811-acbd-310d354f830f",
+  "id": "2b71bfec-e194-4949-94ee-d376b76c2bab",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -47,8 +47,12 @@
           "name": "matches_tournament_id_tournaments_id_fk",
           "tableFrom": "matches",
           "tableTo": "tournaments",
-          "columnsFrom": ["tournament_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "tournament_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -73,7 +77,7 @@
           "name": "author_id",
           "type": "varchar(63)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "title": {
           "name": "title",
@@ -107,7 +111,7 @@
         },
         "prize_pool": {
           "name": "prize_pool",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": false
         },
@@ -175,8 +179,12 @@
           "name": "tournaments_author_id_users_id_fk",
           "tableFrom": "tournaments",
           "tableTo": "users",
-          "columnsFrom": ["author_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "author_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -243,12 +251,16 @@
         "users_name_unique": {
           "name": "users_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         },
         "users_player_name_unique": {
           "name": "users_player_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["player_name"]
+          "columns": [
+            "player_name"
+          ]
         }
       },
       "policies": {},

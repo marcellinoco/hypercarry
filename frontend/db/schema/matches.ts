@@ -1,10 +1,4 @@
-import {
-  integer,
-  json,
-  pgTable,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 
 import { tournaments } from "./tournaments";
 
