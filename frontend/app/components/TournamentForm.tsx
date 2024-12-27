@@ -42,19 +42,22 @@ const TournamentForm = () => {
     new Date(formData.startTime).getTime() / 1000,
   );
 
-  const { data: simulateData } = useSimulateTournamentFactoryCreateTournament({
-    chainId: opBNBTestnet.id,
-    address: process.env.NEXT_PUBLIC_TOURNAMENT_FACTORY_ADDRESS as Address,
-    args: [
-      address ?? "0x",
-      BigInt(startTimeUnix || 0),
-      BigInt(endTimeUnix || 0),
-      BigInt(formData.maxParticipants),
-      parseEther(formData.registrationFee),
-      BigInt(formData.organizerFee),
-      formData.prizePoolPercentages.split(",").map((x) => BigInt(x.trim())),
-    ],
-  });
+  const { data: simulateData, error } =
+    useSimulateTournamentFactoryCreateTournament({
+      chainId: opBNBTestnet.id,
+      address: process.env.NEXT_PUBLIC_TOURNAMENT_FACTORY_ADDRESS as Address,
+      args: [
+        address ?? "0x",
+        BigInt(startTimeUnix || 0),
+        BigInt(endTimeUnix || 0),
+        BigInt(formData.maxParticipants),
+        parseEther(formData.registrationFee),
+        BigInt(formData.organizerFee),
+        formData.prizePoolPercentages.split(",").map((x) => BigInt(x.trim())),
+      ],
+    });
+
+  console.log("error: ", error);
 
   const { data: hash, writeContractAsync } =
     useWriteTournamentFactoryCreateTournament();
@@ -76,50 +79,50 @@ const TournamentForm = () => {
   useEffect(() => {
     if (!isSuccess) return;
 
-    // (async () => {
-    //   const user = await getUser(address ?? "");
-    //   if (user.code === oppCode.SUCCESS && user.user) {
-    //     const tournamentImageId = uuid();
-    //     const tournament: Tournament = {
-    //       id: uuid(),
-    //       authorId: user.user.id,
-    //       startTimeUnix: startTimeUnix,
-    //       endTimeUnix: endTimeUnix,
-    //       maxParticipants: Number(formData.maxParticipants),
-    //       prizePoolPercentages: Number(formData.prizePoolPercentages),
-    //       organizerFee: Number(formData.organizerFee),
-    //       registrationFee: Number(formData.registrationFee),
-    //       createdAt: new Date(),
-    //       updatedAt: new Date(),
-    //       registeredPlayers: undefined,
-    //       format: "Battle Royale",
-    //       game: formData.game,
-    //       tournamentImageId: formData.tournamentImage
-    //         ? tournamentImageId
-    //         : null,
-    //       prizePool: Number(formData.prizePool),
-    //       region: formData.region,
-    //       title: formData.title,
-    //     };
+    (async () => {
+      const user = await getUser(address ?? "");
+      if (user.code === oppCode.SUCCESS && user.user) {
+        const tournamentImageId = uuid();
+        const tournament: Tournament = {
+          id: uuid(),
+          authorId: user.user.id,
+          startTimeUnix: startTimeUnix,
+          endTimeUnix: endTimeUnix,
+          maxParticipants: Number(formData.maxParticipants),
+          prizePoolPercentages: Number(formData.prizePoolPercentages),
+          organizerFee: Number(formData.organizerFee),
+          registrationFee: Number(formData.registrationFee),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          registeredPlayers: undefined,
+          format: "Battle Royale",
+          game: formData.game,
+          tournamentImageId: formData.tournamentImage
+            ? tournamentImageId
+            : null,
+          prizePool: BigInt(formData.prizePool),
+          region: formData.region,
+          title: formData.title,
+        };
 
-    //     const fileTournamentForm = new FormData();
-    //     if (formData.tournamentImage) {
-    //       fileTournamentForm.append(
-    //         "tournamentPicture",
-    //         formData.tournamentImage,
-    //       );
-    //       fileTournamentForm.append("tournamentPictureId", tournamentImageId);
-    //       await uploadFileTournament(fileTournamentForm);
-    //     }
+        const fileTournamentForm = new FormData();
+        if (formData.tournamentImage) {
+          fileTournamentForm.append(
+            "tournamentPicture",
+            formData.tournamentImage,
+          );
+          fileTournamentForm.append("tournamentPictureId", tournamentImageId);
+          await uploadFileTournament(fileTournamentForm);
+        }
 
-    //     const response = await createTournament(tournament);
-    //     if (response.code === oppCode.SUCCESS) {
-    //       toast("Tournament has successfully created");
-    //       return;
-    //     }
-    //   }
-    //   toast("Create tournament failed");
-    // })();
+        const response = await createTournament(tournament);
+        if (response.code === oppCode.SUCCESS) {
+          toast("Tournament has successfully created");
+          return;
+        }
+      }
+      toast("Create tournament failed");
+    })();
   }, [isSuccess]);
 
   return (

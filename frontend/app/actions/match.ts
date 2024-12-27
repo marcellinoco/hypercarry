@@ -1,5 +1,6 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 
 import { db } from "@/db";
@@ -9,12 +10,12 @@ import { getTournamentById } from "./tournament";
 
 export async function createMatches(tournamentId: string) {
   // creating 5 random match inside the start and end time
-  // current space between match is 12 hour
+  // current space between match is 1 hour
   const tournament = await getTournamentById(tournamentId);
 
   if (tournament.code === oppCode.SUCCESS && tournament.tournament) {
     const numberOfMatches = 5;
-    const minSpacingHour = 12;
+    const minSpacingHour = 1;
 
     const schedule = generateMatchSchedule(
       tournament.tournament.startTimeUnix!,
@@ -77,4 +78,23 @@ function generateMatchSchedule(
     });
 
   return schedule;
+}
+
+export async function getTournamentMatches(tournamentId: string) {
+  try {
+    const response = await db
+      .select()
+      .from(matches)
+      .where(eq(matches.tournamentId, tournamentId));
+    return {
+      code: oppCode.SUCCESS,
+      message: "Matches successfully retrieved",
+      matches: response,
+    };
+  } catch {
+    return {
+      code: oppCode.NOT_FOUND,
+      message: "Matches not found",
+    };
+  }
 }

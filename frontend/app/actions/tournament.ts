@@ -32,12 +32,15 @@ export async function createTournament(tournament: Tournament) {
       .returning({
         id: tournaments.id,
       });
+
+    console.log(createdTournament);
     return {
       code: oppCode.SUCCESS,
       message: "Tournament successfully created",
       tournament: createdTournament,
     };
-  } catch {
+  } catch (error: any) {
+    console.log(error);
     return {
       code: oppCode.UNKNOWN,
       message: "Internal Server Error",
