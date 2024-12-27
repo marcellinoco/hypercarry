@@ -5,7 +5,8 @@ import { eq } from "drizzle-orm";
 import { RegisterPlayerSpec } from "@/contracts/tournament";
 import { db } from "@/db";
 import { tournaments } from "@/db/schema/tournaments";
-import { Tournament } from "@/db/types";
+import { users } from "@/db/schema/users";
+import { Tournament, TournamentWithOwner, User } from "@/db/types";
 import { oppCode } from "@/libs/constant";
 
 export async function createTournament(tournament: Tournament) {
@@ -99,11 +100,26 @@ export async function registerPlayer(spec: RegisterPlayerSpec) {
 
 export async function getTournaments() {
   try {
-    const response = db.select().from(tournaments).limit(10);
+    const rows = await db
+      .select({
+        tournament: tournaments,
+        user: users,
+      })
+      .from(tournaments)
+      .leftJoin(users, eq(tournaments.authorId, users.id))
+      .limit(10);
+
+    const result: TournamentWithOwner[] = rows.map((data) => {
+      const response: TournamentWithOwner = {
+        tournament: data.tournament,
+        owner: data.user!,
+      };
+      return response;
+    });
 
     return {
       code: oppCode.SUCCESS,
-      tournaments: response,
+      tournamentsWithOwner: result,
       message: "Tournaments successfully retrieved",
     };
   } catch {

@@ -9,3 +9,4 @@ export enum oppCode {
 }
 
 export const profileBucketName = "profile-images-bucket";
+export const tournamentBucketName = "tournament-images-bucket";
