@@ -126,7 +126,13 @@ export default async function RootLayout({
   const cookie = (await headers()).get("cookie");
   return (
     <html lang="en">
-      <body className={cn("font-sans", parkinsans.variable, neulis.variable)}>
+      <body
+        className={cn(
+          "bg-slate-900 font-sans text-white",
+          parkinsans.variable,
+          neulis.variable,
+        )}
+      >
         <Provider cookies={cookie}>
           <div className="flex min-h-screen min-w-full flex-col">
             <Navbar />
