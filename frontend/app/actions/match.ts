@@ -10,7 +10,7 @@ import { getTournamentById } from "./tournament";
 
 export async function createMatches(tournamentId: string) {
   // creating 5 random match inside the start and end time
-  // current space between match is 12 hour
+  // current space between match is 1 hour
   const tournament = await getTournamentById(tournamentId);
 
   if (tournament.code === oppCode.SUCCESS && tournament.tournament) {
@@ -81,8 +81,6 @@ function generateMatchSchedule(
 }
 
 export async function getTournamentMatches(tournamentId: string) {
-  // creating 5 random match inside the start and end time
-  // current space between match is 12 hour
   try {
     const response = await db
       .select()
