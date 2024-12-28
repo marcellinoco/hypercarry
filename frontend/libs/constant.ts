@@ -5,7 +5,7 @@ export enum oppCode {
   NOT_FOUND,
   INVALID_DATA,
   ALREADY_REGISTERED,
-  OTP_EXPIRED,
+  TOURNAMENT_FULL,
 }
 
 export const profileBucketName = "profile-images-bucket";

@@ -25,7 +25,7 @@ export default function HomePage() {
     queryFn: async () => await getTournaments(),
   });
 
-  // const data = await getData();
+  console.log(tournamentsData);
 
   return (
     <main className="flex min-h-svh items-stretch bg-slate-950">
@@ -41,14 +41,14 @@ export default function HomePage() {
         <div className="flex grow flex-col items-stretch px-4 py-10">
           <div className="flex flex-col items-stretch *:justify-start *:transition-transform">
             <Link
-              href="/"
+              href="/tournament/create"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
                 "text-slate-300 hover:scale-105 hover:bg-slate-900 hover:text-white",
               )}
             >
               <Trophy size={24} />
-              <p className="">Tournaments</p>
+              <p className="">Create Tournaments</p>
             </Link>
             <Link
               href="/profile"
@@ -58,7 +58,7 @@ export default function HomePage() {
               )}
             >
               <UsersRound size={24} />
-              <p className="">Players</p>
+              <p className="">Profile</p>
             </Link>
           </div>
         </div>

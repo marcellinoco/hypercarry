@@ -39,7 +39,6 @@ export async function createUser(formData: FormData) {
   const name = formData.get("name") as string;
   const playerName = formData.get("playerName") as string;
   const profilePicture = formData.get("profilePicture") as File;
-  console.log(profilePicture);
 
   const imageId = uuid();
 
@@ -48,7 +47,6 @@ export async function createUser(formData: FormData) {
       where: eq(users.walletAddress, walletAddress),
     });
 
-    console.log("dah ada bang", userExists);
     if (userExists) {
       return {
         code: oppCode.ALREADY_REGISTERED,
@@ -84,8 +82,6 @@ export async function updateUser(formData: FormData) {
   const playerName = formData.get("playerName") as string;
   const profilePictureId = formData.get("profilePictureId") as string;
   const profilePicture = formData.get("profilePicture") as File;
-
-  console.log("kok ini undefined", profilePicture);
 
   try {
     await db

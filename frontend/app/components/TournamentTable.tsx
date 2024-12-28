@@ -56,7 +56,6 @@ export function TournamentTable<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => {
-              console.log("ini bang palen: ", row);
               return (
                 <TableRow
                   key={row.id}

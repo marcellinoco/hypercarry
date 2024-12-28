@@ -33,8 +33,6 @@ export async function uploadFileProfile(imageId: string, objectFile: File) {
     buffer.length,
     metadata,
   );
-
-  console.log("resp: ", response);
 }
 
 export async function uploadFileTournament(formData: FormData) {
@@ -67,8 +65,6 @@ export async function uploadFileTournament(formData: FormData) {
     buffer.length,
     metadata,
   );
-
-  console.log("resp: ", response);
 }
 
 export async function getFile(bucket: string, imageId: string) {
@@ -78,6 +74,5 @@ export async function getFile(bucket: string, imageId: string) {
     imageId,
     24 * 60 * 60,
   );
-  console.log(link);
   return link;
 }

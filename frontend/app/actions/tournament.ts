@@ -34,14 +34,12 @@ export async function createTournament(tournament: Tournament) {
         id: tournaments.id,
       });
 
-    console.log(createdTournament);
     return {
       code: oppCode.SUCCESS,
       message: "Tournament successfully created",
       tournament: createdTournament,
     };
   } catch (error: any) {
-    console.log(error);
     return {
       code: oppCode.UNKNOWN,
       message: "Internal Server Error",
@@ -52,32 +50,41 @@ export async function createTournament(tournament: Tournament) {
 export async function registerPlayer(spec: RegisterPlayerSpec) {
   const newUserId = spec.playerId;
   try {
-    const oldUser = await db.query.tournaments.findFirst({
+    const tournament = await db.query.tournaments.findFirst({
       where: eq(tournaments.id, spec.tournamentId),
     });
 
-    if (!oldUser) {
+    if (!tournament) {
       return {
         code: oppCode.NOT_FOUND,
         messsage: "Tournament not found",
       };
     }
 
-    if (!Array.isArray(oldUser.registeredPlayers)) {
+    const participants = tournament.registeredPlayers as string[];
+
+    if (participants.length >= tournament.maxParticipants) {
+      return {
+        code: oppCode.TOURNAMENT_FULL,
+        message: "Tournament capacity has reached its maximum",
+      };
+    }
+
+    if (!Array.isArray(tournament.registeredPlayers)) {
       return {
         code: oppCode.INVALID_DATA,
         message: "Invalid registered player format",
       };
     }
 
-    if (oldUser.registeredPlayers.includes(newUserId)) {
+    if (tournament.registeredPlayers.includes(newUserId)) {
       return {
         code: oppCode.ALREADY_REGISTERED,
         message: "Player already registered",
       };
     }
 
-    const json = oldUser.registeredPlayers || [];
+    const json = tournament.registeredPlayers || [];
 
     if (Array.isArray(json)) {
       const updated = [...json, newUserId];
@@ -147,6 +154,34 @@ export async function getTournamentById(tournamentId: string) {
       code: oppCode.SUCCESS,
       tournament: response,
       message: "Tournament successfully retrieved",
+    };
+  } catch {
+    return {
+      code: oppCode.UNKNOWN,
+      message: "Internal server error",
+    };
+  }
+}
+
+export async function getTournamentParticipants(tournamentId: string) {
+  try {
+    const response = await db.query.tournaments.findFirst({
+      where: eq(tournaments.id, tournamentId),
+    });
+
+    if (!response) {
+      return {
+        code: oppCode.NOT_FOUND,
+        message: "Tournament not found",
+      };
+    }
+
+    const participants = response.registeredPlayers as string[];
+
+    return {
+      code: oppCode.SUCCESS,
+      participants: participants,
+      message: "Tournament participants successfully retrieved",
     };
   } catch {
     return {

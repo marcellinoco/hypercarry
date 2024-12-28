@@ -93,13 +93,14 @@ export const columns: ColumnDef<TournamentWithOwner>[] = [
         return () => clearTimeout(timer);
       }, []);
 
+      const currentParticipants = row.original.tournament
+        .registeredPlayers as string[];
+
       return (
         <div className="font-medium">
           <NumberFlowGroup>
             <NumberFlow
-              value={
-                shouldAnimate ? row.original.tournament.maxParticipants : 0
-              }
+              value={shouldAnimate ? currentParticipants.length : 0}
               continuous
             />
             <span className="mx-1">/</span>
