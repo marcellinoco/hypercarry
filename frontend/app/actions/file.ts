@@ -1,6 +1,10 @@
 "use server";
 
-import { oppCode, profileBucketName } from "@/libs/constant";
+import {
+  oppCode,
+  profileBucketName,
+  tournamentBucketName,
+} from "@/libs/constant";
 import { minioClient } from "@/libs/minio";
 
 export async function uploadFileProfile(imageId: string, objectFile: File) {
@@ -29,8 +33,6 @@ export async function uploadFileProfile(imageId: string, objectFile: File) {
     buffer.length,
     metadata,
   );
-
-  console.log("resp: ", response);
 }
 
 export async function uploadFileTournament(formData: FormData) {
@@ -44,9 +46,9 @@ export async function uploadFileTournament(formData: FormData) {
     };
   }
 
-  const exists = await minioClient.bucketExists(profileBucketName);
+  const exists = await minioClient.bucketExists(tournamentBucketName);
   if (!exists) {
-    await minioClient.makeBucket(profileBucketName, "us-east-1");
+    await minioClient.makeBucket(tournamentBucketName, "us-east-1");
   }
 
   const metadata = {
@@ -57,14 +59,12 @@ export async function uploadFileTournament(formData: FormData) {
   const buffer = Buffer.from(arrayBuffer);
 
   const response = await minioClient.putObject(
-    profileBucketName,
+    tournamentBucketName,
     imageId,
     buffer,
     buffer.length,
     metadata,
   );
-
-  console.log("resp: ", response);
 }
 
 export async function getFile(bucket: string, imageId: string) {
@@ -74,6 +74,5 @@ export async function getFile(bucket: string, imageId: string) {
     imageId,
     24 * 60 * 60,
   );
-  console.log(link);
   return link;
 }

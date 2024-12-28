@@ -1,15 +1,21 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { toast } from "sonner";
+import { useAccount } from "wagmi";
 
 import { createMatches, getTournamentMatches } from "@/app/actions/match";
-import { getTournamentById } from "@/app/actions/tournament";
+import { getTournamentById, registerPlayer } from "@/app/actions/tournament";
+import { getUser } from "@/app/actions/user";
 import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
+import { RegisterPlayerSpec } from "@/contracts/tournament";
+import { oppCode } from "@/libs/constant";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function Page() {
   const { id } = useParams();
-  console.log(id);
+  const { address } = useAccount();
+  const queryClient = useQueryClient();
 
   const { data: tournamentData } = useQuery({
     queryKey: ["tournament"],
@@ -28,10 +34,42 @@ export default function Page() {
     enabled: !!tournamentData,
   });
 
-  console.log(matchesData);
+  const { mutate: registerPlayerMutation } = useMutation({
+    mutationFn: async (spec: RegisterPlayerSpec) => await registerPlayer(spec),
+    onSuccess: () => {
+      toast("Your registration has completed");
+    },
+  });
 
-  const handleCreateMatches = async () => {
-    await createMatches(String(id));
+  const { mutate: createMatchesMutation } = useMutation({
+    mutationFn: async () => await createMatches(String(id)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["matches"] });
+      toast("Matches has successfully generated");
+    },
+  });
+
+  const handleRegisterPlayer = async () => {
+    if (!address) {
+      toast("Address not found");
+      return;
+    }
+
+    const userResponse = await getUser(address);
+    if (userResponse.code !== oppCode.SUCCESS) {
+      toast("User account not found");
+    }
+
+    const spec: RegisterPlayerSpec = {
+      playerId: userResponse.user!.id,
+      tournamentId: String(id),
+    };
+
+    registerPlayerMutation(spec);
+  };
+
+  const handleCreateMatches = () => {
+    createMatchesMutation();
   };
 
   return (
@@ -40,6 +78,7 @@ export default function Page() {
         <Button onClick={handleCreateMatches}>
           Stop Registration and Create Matches
         </Button>
+        <Button onClick={handleRegisterPlayer}>Register player</Button>
       </div>
       <div className="flex w-[40rem] flex-col items-center gap-2">
         <p className="font-cursive text-lg font-500 text-slate-400/70">
@@ -61,7 +100,7 @@ export default function Page() {
         {matchesData && matchesData.matches && (
           <div className="flex flex-col">
             {matchesData.matches.map((match, index) => (
-              <div className="grid w-full grid-cols-8">
+              <div className="grid w-full grid-cols-8" key={match.id}>
                 <h3 className="col-span-3">Match {index}</h3>
                 <h5 className="col-span-1 text-center">:</h5>
                 <h5 className="col-span-4">
