@@ -25,7 +25,6 @@ export default function Page() {
     refetchOnWindowFocus: false,
     enabled: !!id,
   });
-
   const { data: matchesData } = useQuery({
     queryKey: ["matches"],
     queryFn: async () => {
