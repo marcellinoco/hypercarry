@@ -42,7 +42,7 @@ services:
       MINIO_CONSOLE_ADDRESS: ":9001"
     volumes:
       - minio-local:/var/lib/minio
-    command: minio server /data
+    command: minio server /var/lib/minio
 
 volumes:
   postgres-local:

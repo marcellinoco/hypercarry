@@ -1,19 +1,22 @@
 "use server";
 
+import {
+  oppCode,
+  profileBucketName,
+  tournamentBucketName,
+} from "@/libs/constant";
 import { minioClient } from "@/libs/minio";
 
-export async function uploadFile(imageId: string, objectFile: File) {
-  const bucket = "profile-images-bucket";
-
+export async function uploadFileProfile(imageId: string, objectFile: File) {
   const file = objectFile;
 
   if (!file) {
     throw new Error("File or path can't be empty");
   }
 
-  const exists = await minioClient.bucketExists(bucket);
+  const exists = await minioClient.bucketExists(profileBucketName);
   if (!exists) {
-    await minioClient.makeBucket(bucket, "us-east-1");
+    await minioClient.makeBucket(profileBucketName, "us-east-1");
   }
 
   const metadata = {
@@ -24,14 +27,44 @@ export async function uploadFile(imageId: string, objectFile: File) {
   const buffer = Buffer.from(arrayBuffer);
 
   const response = await minioClient.putObject(
-    bucket,
+    profileBucketName,
     imageId,
     buffer,
     buffer.length,
     metadata,
   );
+}
 
-  console.log("resp: ", response);
+export async function uploadFileTournament(formData: FormData) {
+  const tournamentPicture = formData.get("tournamentPicture") as File;
+  const imageId = formData.get("tournamentPictureId") as string;
+
+  if (!tournamentPicture) {
+    return {
+      code: oppCode.INVALID_DATA,
+      message: "Invalid data",
+    };
+  }
+
+  const exists = await minioClient.bucketExists(tournamentBucketName);
+  if (!exists) {
+    await minioClient.makeBucket(tournamentBucketName, "us-east-1");
+  }
+
+  const metadata = {
+    "Content-Type": tournamentPicture.type,
+  };
+
+  const arrayBuffer = await tournamentPicture.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  const response = await minioClient.putObject(
+    tournamentBucketName,
+    imageId,
+    buffer,
+    buffer.length,
+    metadata,
+  );
 }
 
 export async function getFile(bucket: string, imageId: string) {
@@ -41,6 +74,5 @@ export async function getFile(bucket: string, imageId: string) {
     imageId,
     24 * 60 * 60,
   );
-  console.log(link);
   return link;
 }

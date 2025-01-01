@@ -4,10 +4,10 @@ import { useState } from "react";
 
 import Image from "next/image";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { getFile } from "../actions/file";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);

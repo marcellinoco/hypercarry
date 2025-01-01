@@ -3,31 +3,45 @@
 import { useEffect, useState } from "react";
 
 import { format } from "date-fns";
+import { Rows } from "lucide-react";
 import Image from "next/image";
 
-import { Tournament } from "@/data/landing";
+import { TournamentWithOwner } from "@/db/types";
+import { tournamentBucketName } from "@/libs/constant";
 import NumberFlow, { NumberFlowGroup } from "@number-flow/react";
+import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
+import { getFile } from "../actions/file";
 
-export const columns: ColumnDef<Tournament>[] = [
+export const columns: ColumnDef<TournamentWithOwner>[] = [
   {
     accessorKey: "gameImage",
     header: "Name",
     cell: ({ row }) => {
+      const { data } = useQuery({
+        queryKey: ["tournament-image"],
+        queryFn: async () =>
+          await getFile(
+            tournamentBucketName,
+            row.original.tournament.tournamentImageId ?? "",
+          ),
+      });
       return (
         <div className="flex items-center gap-4">
           <div className="relative h-12 w-12 overflow-hidden rounded-lg">
-            <Image
-              src={row.getValue("gameImage")}
-              alt={row.original.game}
-              className="object-cover"
-              fill
-            />
+            {data && (
+              <Image
+                src={data}
+                alt={row.original.tournament.game ?? ""}
+                className="object-cover"
+                fill
+              />
+            )}
           </div>
           <div className="flex flex-col">
-            <p className="font-medium">{row.original.title}</p>
+            <p className="font-medium">{row.original.tournament.title}</p>
             <p className="text-sm text-slate-500">
-              {row.original.game} - {row.original.organizer.name}
+              {row.original.tournament.game} - {row.original.owner.name}
             </p>
           </div>
         </div>
@@ -39,7 +53,7 @@ export const columns: ColumnDef<Tournament>[] = [
     header: "Prize Pool",
     cell: ({ row }) => {
       const [shouldAnimate, setShouldAnimate] = useState(false);
-      const amount = parseFloat(row.getValue("prizePool"));
+      const amount = Number(row.original.tournament.prizePool);
 
       useEffect(() => {
         // Small delay before starting animation
@@ -79,16 +93,21 @@ export const columns: ColumnDef<Tournament>[] = [
         return () => clearTimeout(timer);
       }, []);
 
+      const currentParticipants = row.original.tournament
+        .registeredPlayers as string[];
+
       return (
         <div className="font-medium">
           <NumberFlowGroup>
             <NumberFlow
-              value={shouldAnimate ? row.original.registeredTeams : 0}
+              value={shouldAnimate ? currentParticipants.length : 0}
               continuous
             />
             <span className="mx-1">/</span>
             <NumberFlow
-              value={shouldAnimate ? row.original.maxTeams : 0}
+              value={
+                shouldAnimate ? row.original.tournament.maxParticipants : 0
+              }
               continuous
             />
           </NumberFlowGroup>
@@ -100,8 +119,8 @@ export const columns: ColumnDef<Tournament>[] = [
     accessorKey: "startDate",
     header: "Event Date",
     cell: ({ row }) => {
-      const startDate = new Date(row.original.startDate);
-      const endDate = new Date(row.original.endDate);
+      const startDate = new Date(row.original.tournament.startTimeUnix * 1000);
+      const endDate = new Date(row.original.tournament.endTimeUnix * 1000);
       const currentDate = new Date();
 
       const formattedStart = format(startDate, "MMM d");

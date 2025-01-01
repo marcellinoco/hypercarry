@@ -1,6 +1,6 @@
 "use client";
 
-import { TournamentForm } from "../components/TournamentForm";
+import { TournamentForm } from "@/app/components/TournamentForm";
 
 function page() {
   return (

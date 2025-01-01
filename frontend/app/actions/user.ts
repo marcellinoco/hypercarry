@@ -6,13 +6,20 @@ import { v4 as uuid } from "uuid";
 import { db } from "@/db";
 import { users } from "@/db/schema/users";
 import { oppCode } from "@/libs/constant";
-import { uploadFile } from "./file";
+import { uploadFileProfile } from "./file";
 
 export async function getUser(address: string) {
   try {
     const response = await db.query.users.findFirst({
       where: eq(users.walletAddress, address),
     });
+
+    if (!response) {
+      return {
+        code: oppCode.NOT_FOUND,
+        message: "User not found",
+      };
+    }
 
     return {
       code: oppCode.SUCCESS,
@@ -28,55 +35,82 @@ export async function getUser(address: string) {
 }
 
 export async function createUser(formData: FormData) {
+  const walletAddress = formData.get("walletAddress") as string;
+  const name = formData.get("name") as string;
+  const playerName = formData.get("playerName") as string;
+  const profilePicture = formData.get("profilePicture") as File;
+
+  const imageId = uuid();
+
   try {
-    const walletAddress = formData.get("walletAddress") as string;
-    const name = formData.get("name") as string;
-    const playerName = formData.get("playerName") as string;
-    const profilePicture = formData.get("profilePicture") as File;
+    const userExists = await db.query.users.findFirst({
+      where: eq(users.walletAddress, walletAddress),
+    });
 
-    const imageId = uuid();
-    // create user on db
-    try {
-      await db.insert(users).values({
-        id: uuid(),
-        name: name,
-        playerName: playerName,
-        walletAddress: walletAddress,
-        imageId: imageId,
-      });
-
-      await uploadFile(imageId, profilePicture);
-
+    if (userExists) {
       return {
-        code: oppCode.SUCCESS,
-        message: "User has successfully created",
-      };
-    } catch {
-      return {
-        code: oppCode.UNKNOWN,
-        message: "Internal server Error",
+        code: oppCode.ALREADY_REGISTERED,
+        message: "Wallet has been registered",
       };
     }
 
-    // Here you would typically:
-    // 1. Upload the profile picture to your storage service
-    // 2. Create the user in your database
-    // 3. Handle any other necessary operations
+    await db.insert(users).values({
+      id: uuid(),
+      name: name,
+      playerName: playerName,
+      walletAddress: walletAddress,
+      imageId: profilePicture ? imageId : null,
+    });
 
-    // Example pseudocode:
-    // const imageUrl = await uploadToStorage(profilePicture);
-    // const user = await db.users.create({
-    //   data: {
-    //     name,
-    //     playerName,
-    //     walletAddress,
-    //     profilePictureUrl: imageUrl,
-    //   },
-    // });
-  } catch (error) {
-    console.error("Error creating user:", error);
+    await uploadFileProfile(imageId, profilePicture);
+
     return {
-      error: "Failed to create user",
+      code: oppCode.SUCCESS,
+      message: "User has successfully created",
+    };
+  } catch {
+    return {
+      code: oppCode.UNKNOWN,
+      message: "Internal server Error",
+    };
+  }
+}
+
+export async function updateUser(formData: FormData) {
+  const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
+  const playerName = formData.get("playerName") as string;
+  const profilePictureId = formData.get("profilePictureId") as string;
+  const profilePicture = formData.get("profilePicture") as File;
+
+  try {
+    await db
+      .update(users)
+      .set({
+        name: name,
+        playerName: playerName,
+      })
+      .where(eq(users.id, id));
+
+    if (profilePicture) {
+      try {
+        await uploadFileProfile(profilePictureId, profilePicture);
+      } catch {
+        return {
+          code: oppCode.UNKNOWN,
+          message: "Upload file Error",
+        };
+      }
+    }
+
+    return {
+      code: oppCode.SUCCESS,
+      message: "User has successfully updated",
+    };
+  } catch {
+    return {
+      code: oppCode.UNKNOWN,
+      message: "Internal server Error",
     };
   }
 }
