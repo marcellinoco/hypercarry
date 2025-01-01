@@ -8,18 +8,23 @@ import { LayoutGroup, motion } from "motion/react";
 import { playersAtom } from "@/app/atoms";
 
 export default function PlayerPicker({
-  players,
+  participants,
 }: {
-  players: Record<string, string>;
+  participants: string[] | undefined;
 }) {
   const [playerState, setPlayerState] = useAtom(playersAtom);
 
   useEffect(() => {
-    setPlayerState({
-      unselected: Object.entries(players).map(([id, name]) => ({ id, name })),
-      selected: [],
-    });
-  }, [players, setPlayerState]);
+    if (participants) {
+      setPlayerState({
+        unselected: participants.map((name, index) => ({
+          id: index.toString(),
+          name,
+        })),
+        selected: [],
+      });
+    }
+  }, [participants, setPlayerState]);
 
   const handleSelectPlayer = (playerId: string, playerName: string) => {
     setPlayerState((prev) => ({
