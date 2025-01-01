@@ -47,10 +47,7 @@ const defaultUserState: UserState = {
 };
 
 // Persist user state in localStorage
-export const userAtom = atomWithStorage<UserState>(
-  "user",
-  defaultUserState,
-);
+export const userAtom = atomWithStorage<UserState>("user", defaultUserState);
 
 // Derived atoms for specific pieces of user state
 export const walletAddressAtom = atom(
@@ -102,3 +99,20 @@ export const eloRatingAtom = atom(
 export const resetUserAtom = atom(null, (get, set) => {
   set(userAtom, defaultUserState);
 });
+
+export const playersAtom = atom<{
+  unselected: { id: string; name: string }[];
+  selected: { id: string; name: string }[];
+}>({
+  unselected: [],
+  selected: [],
+});
+
+export const selectedBattleRoyalePlayersAtom = atom<{
+  unselected: { id: string; name: string }[];
+  selected: { id: string; name: string }[];
+}>({
+  unselected: [],
+  selected: [],
+});
+
